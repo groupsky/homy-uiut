@@ -45,7 +45,6 @@ services:
       - "1880"
     volumes:
       - ./config/node-red/package.json:/usr/src/node-red/package.json
-      - ./config/node-red/flows.json:/data/flows.json
       - ./data/node-red:/data
 
   grafana:
