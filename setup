@@ -1,0 +1,25 @@
+#!/bin/bash
+
+sudo chmod 775 config/mosquitto
+sudo mkdir -p data/mosquitto
+sudo chown 1883:1883 data/mosquitto
+sudo chmod 770 data/mosquitto
+sudo mkdir -p log/mosquitto
+sudo chown 1883:1883 log/mosquitto
+sudo chmod 775 log/mosquitto
+
+sudo chmod 775 config/influxdb
+sudo mkdir -p data/influxdb
+sudo chown 999:999 data/influxdb
+sudo chmod 770 data/influxdb
+
+sudo mkdir -p data/node-red
+sudo chown 1001:1001 data/node-red
+sudo chmod 770 data/node-red
+
+sudo mkdir -p data/grafana
+sudo chown 472:472 data/grafana
+sudo chmod 770 data/grafana
+sudo mkdir -p log/grafana
+sudo chown 472:472 log/grafana
+sudo chmod 775 log/grafana

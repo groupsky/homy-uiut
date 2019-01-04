@@ -1,0 +1,134 @@
+[
+  {
+    "id": "sensors",
+    "type": "tab",
+    "label": "Sensors",
+    "disabled": false,
+    "info": "Logging of sensors in influxdb"
+  },
+  {
+    "id": "mqtt",
+    "type": "mqtt-broker",
+    "z": "",
+    "name": "mqtt.local",
+    "broker": "mosquitto",
+    "port": "1883",
+    "clientid": "",
+    "usetls": false,
+    "compatmode": true,
+    "keepalive": "60",
+    "cleansession": true,
+    "birthTopic": "",
+    "birthQos": "0",
+    "birthPayload": "",
+    "closeTopic": "",
+    "closeQos": "0",
+    "closePayload": "",
+    "willTopic": "",
+    "willQos": "0",
+    "willPayload": ""
+  },
+  {
+    "id": "influxdb",
+    "type": "influxdb",
+    "z": "",
+    "hostname": "influxdb",
+    "port": "8086",
+    "protocol": "http",
+    "database": "uiut",
+    "name": "influxdb.local",
+    "usetls": false,
+    "tls": ""
+  },
+  {
+    "id": "sensors.mqtt-in",
+    "type": "mqtt in",
+    "z": "sensors",
+    "name": "",
+    "topic": "/sensors",
+    "qos": "2",
+    "broker": "mqtt",
+    "x": 270,
+    "y": 140,
+    "wires": [
+      [
+        "sensors.debug-mqtt",
+        "sensors.parse-json"
+      ]
+    ]
+  },
+  {
+    "id": "sensors.debug-mqtt",
+    "type": "debug",
+    "z": "sensors",
+    "name": "",
+    "active": true,
+    "tosidebar": true,
+    "console": false,
+    "tostatus": false,
+    "complete": "false",
+    "x": 500,
+    "y": 100,
+    "wires": []
+  },
+  {
+    "id": "sensors.influx-out",
+    "type": "influxdb out",
+    "z": "sensors",
+    "influxdb": "influxdb",
+    "name": "",
+    "measurement": "sensors",
+    "precision": "",
+    "retentionPolicy": "",
+    "x": 790,
+    "y": 160,
+    "wires": []
+  },
+  {
+    "id": "sensors.map-sensors",
+    "type": "function",
+    "z": "sensors",
+    "name": "map sensors",
+    "func": "const {label, sensor, value, timestamp} = msg.payload\n\nconst tags = {sensor}\n\nswitch (label) {\n    case 'DHT0': \n        tags.room = 'living-room'\n        tags.location = 'sofa'\n        tags.socket = 1308\n        break\n    case 'DHT1':\n        tags.room = 'bobo'\n        tags.location = 'bed'\n        tags.socket = 2319\n        break\n}\n\nmsg.payload = [\n    {\n        time: new Date(timestamp),\n        value\n    },\n    tags\n]\n\nreturn msg\n",
+    "outputs": 1,
+    "noerr": 0,
+    "x": 590,
+    "y": 160,
+    "wires": [
+      [
+        "sensors.influx-out",
+        "sensors.debug-map"
+      ]
+    ]
+  },
+  {
+    "id": "sensors.parse-json",
+    "type": "json",
+    "z": "sensors",
+    "name": "",
+    "property": "payload",
+    "action": "",
+    "pretty": false,
+    "x": 410,
+    "y": 160,
+    "wires": [
+      [
+        "sensors.map-sensors"
+      ]
+    ]
+  },
+  {
+    "id": "sensors.debug-map",
+    "type": "debug",
+    "z": "sensors",
+    "name": "",
+    "active": true,
+    "tosidebar": true,
+    "console": false,
+    "tostatus": false,
+    "complete": "false",
+    "x": 770,
+    "y": 80,
+    "wires": []
+  }
+]

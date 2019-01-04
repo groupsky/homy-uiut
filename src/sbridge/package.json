@@ -1,0 +1,16 @@
+{
+  "name": "sbridge",
+  "version": "0.0.1",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "start": "node index.js",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "Geno Roupsky <geno@roupsky.name> (https://github.com/groupsky)",
+  "license": "ISC",
+  "dependencies": {
+    "mqtt": "^2.18.8",
+    "serialport": "^7.1.1"
+  }
+}
