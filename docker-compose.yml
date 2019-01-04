@@ -22,7 +22,7 @@ services:
       - ./src/sbridge:/app
     environment:
       - PORT=/dev/ttyUSB0
-      - BROKER_URL=mqtt://mqtt
+      - BROKER_URL=mqtt://mosquitto
       - TOPIC=/sensors
     command: "npm start"
 
