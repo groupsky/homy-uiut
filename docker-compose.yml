@@ -21,7 +21,7 @@ services:
     volumes:
       - ./src/sbridge:/app
     environment:
-      - PORT="/dev/ttyUSB0"
+      - PORT=/dev/ttyUSB0
       - BROKER_URL=mqtt://mqtt
       - TOPIC=/sensors
     command: "npm start"
