@@ -8,15 +8,20 @@ const SerialPort = require('serialport')
 const mqtt = require('mqtt')
 const Readline = SerialPort.parsers.Readline
 
-const port = new SerialPort(PORT)
+const port = new SerialPort(PORT, {
+    baudRate: 9600
+})
 const client = mqtt.connect(BROKER_URL)
 
 const parser = port.pipe(new Readline())
 
+port.on('error', err => console.error(err))
+parser.on('error', err => console.error(err))
+
 let data
 
 parser.on('data', line => {
-  console.log(line)
+  console.log(new Date(), line)
   try {
     data = JSON.parse(line)
   } catch {
@@ -29,3 +34,5 @@ parser.on('data', line => {
     console.error(e)
   }
 })
+
+console.log('Starter listening on', PORT, 'sending to', BROKER_URL, TOPIC)
