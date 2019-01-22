@@ -5,54 +5,60 @@ services:
   mosquitto:
     image: eclipse-mosquitto:1.5
     ports:
-      - "1883"
+      - "1883:1883"
     volumes:
       - ./config/mosquitto:/mosquitto/config
       - ./log/mosquitto:/mosquitto/log
       - ./data/mosquitto:/mosquitto/data
+    restart: always
 
-  sbridge:
-    image: node:10
-    working_dir: /app
-    depends_on:
-      - mosquitto
-    devices:
-      - "${SERIAL_PORT}:/dev/ttyUSB0"
-    volumes:
-      - ./src/sbridge:/app
-    environment:
-      - PORT=/dev/ttyUSB0
-      - BROKER_URL=mqtt://mosquitto
-      - TOPIC=/sensors
-    command: "npm start"
+#  sbridge:
+#    image: node:10
+#    working_dir: /app
+#    depends_on:
+#      - mosquitto
+#    devices:
+#      - "${SERIAL_PORT}:/dev/ttyUSB0"
+#    volumes:
+#      - ./src/sbridge:/app
+#    environment:
+#      - PORT=/dev/ttyUSB0
+#      - BROKER_URL=mqtt://mosquitto
+#      - TOPIC=/sensors
+#    command: "npm start"
 
   influxdb:
     image: influxdb:1.7
     ports:
-      - "8086"
+      - "8086:8086"
     volumes:
       - ./config/influxdb:/etc/influxdb
       - ./data/influxdb:/var/lib/influxdb
     environment:
       - INFLUXDB_DB=uiut
+    restart: always
 
-  nodered:
-    image: nodered/node-red-docker:v8
-    depends_on:
-      - mosquitto
-      - influxdb
-    ports:
-      - "1880"
-    volumes:
-      - ./config/node-red/package.json:/usr/src/node-red/package.json
-      - ./data/node-red:/data
+#  nodered:
+#    build: .
+#    depends_on:
+#      - mosquitto
+#      - influxdb
+#    devices:
+#      - "/dev/ttyUSB1:/dev/ttyUSB0"
+#    ports:
+#      - "1880:1880"
+#    volumes:
+#      - ./config/node-red/package.json:/usr/src/node-red/package.json
+#      - ./data/node-red:/data
 
   grafana:
     image: grafana/grafana
     depends_on:
       - influxdb
     ports:
-      - "3000"
+      - "80:3000"
     volumes:
       - ./log/grafana:/var/log/grafana
       - ./data/grafana:/var/lib/grafana
+    restart: always
+
